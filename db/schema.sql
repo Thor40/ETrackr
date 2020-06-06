@@ -1,5 +1,8 @@
 DROP TABLE IF EXISTS department;
+CREATE DATABASE employment_db;
+USE employment_db;
 
-CREATE TABLE department {
-
-}
+CREATE TABLE IF NOT EXISTS department (
+  id INTEGER AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(30) NOT NULL
+);
