@@ -1,8 +1,17 @@
-DROP TABLE IF EXISTS department;
-CREATE DATABASE employment_db;
+DROP TABLE IF EXISTS role;
+DROP TABLE IF EXISTS departments;
+
 USE employment_db;
 
-CREATE TABLE IF NOT EXISTS department (
+CREATE TABLE departments (
   id INTEGER AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE role (
+  id INTEGER AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(30) NOT NULL,
+  salary DECIMAL,
+  department_id INTEGER,
+  CONSTRAINT fk_department FOREIGN KEY (department_id) REFERENCES departments(id) ON DELETE SET NULL
 );
