@@ -42,7 +42,7 @@ promptUser = () => {
                     queryDepartment();
                     break;
                 case 'add a role':
-                
+                    queryRole();
                     break;
                 case 'add a employee':
                 
@@ -111,6 +111,47 @@ function queryDepartment() {
 function addDepartment(answer) {
     const query = `INSERT INTO departments (name) VALUES (?)`;
     const params = [answer];
+
+    connection.query(query, params, function(err, results) {
+        if(err) throw err;
+        promptUser();
+    })
+};
+
+function queryRole() {
+    const query = `SELECT * FROM departments`;
+    connection.query(query, function(err, results) {
+        console.log(results)
+    inquirer
+    .prompt([
+        {
+            type: "input",
+            name: "title",
+            message: "What is the role title?",
+        },
+        {
+            type: "input",
+            name: "salary",
+            message: "What is the role salary?",
+        },
+        {
+            type: "list",
+            name: "dSelect",
+            message: "Which department does the role belong?",
+            choices: results
+        },
+    ]).then( 
+        function(answer) {
+        console.log(answer.title, answer.salary, answer.dSelect, 'prompt')
+        addRole(answer.title, answer.salary, answer.dSelect);
+        });
+    })
+};
+
+function addRole(title, salary, dSelect) {
+    console.log(title, salary, dSelect, 'addrole')
+    const query = `INSERT INTO role (title, salary) VALUES (?,?)`;
+    const params = [title, salary];
 
     connection.query(query, params, function(err, results) {
         if(err) throw err;
