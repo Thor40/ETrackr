@@ -44,14 +44,15 @@ promptUser = () => {
                 case 'add a role':
                     queryRole();
                     break;
-                case 'add a employee':
-                
+                case 'add an employee':
+                    queryEmployee();
                     break;
                 case 'update an employee role':
 
                     break;
                 default:
                     console.log('Make a better choice!')
+                    promptUser();
                     break;
             }
         }
@@ -119,9 +120,6 @@ function addDepartment(answer) {
 };
 
 function queryRole() {
-    const query = `SELECT * FROM departments`;
-    connection.query(query, function(err, results) {
-        console.log(results)
     inquirer
     .prompt([
         {
@@ -135,23 +133,62 @@ function queryRole() {
             message: "What is the role salary?",
         },
         {
-            type: "list",
-            name: "dSelect",
-            message: "Which department does the role belong?",
-            choices: results
+            type: "input",
+            name: "department_id",
+            message: "What is the department ID?",
         },
     ]).then( 
         function(answer) {
-        console.log(answer.title, answer.salary, answer.dSelect, 'prompt')
-        addRole(answer.title, answer.salary, answer.dSelect);
+        console.log(answer, 'prompt')
+        addRole(answer);
         });
+};
+
+function addRole(role) {
+    console.log(role, 'addrole')
+    const query = `INSERT INTO role SET ?`;
+    const params = role;
+
+    connection.query(query, params, function(err, results) {
+        if(err) throw err;
+        promptUser();
     })
 };
 
-function addRole(title, salary, dSelect) {
-    console.log(title, salary, dSelect, 'addrole')
-    const query = `INSERT INTO role (title, salary) VALUES (?,?)`;
-    const params = [title, salary];
+function queryEmployee() {
+    inquirer
+    .prompt([
+        {
+            type: "input",
+            name: "first_name",
+            message: "What is the first name?",
+        },
+        {
+            type: "input",
+            name: "last_name",
+            message: "What is the last name?",
+        },
+        {
+            type: "input",
+            name: "role_id",
+            message: "What is the role ID?",
+        },
+        {
+            type: "input",
+            name: "manager_id",
+            message: "What is the manager ID?",
+        },
+    ]).then( 
+        function(answer) {
+        console.log(answer, 'prompt')
+        addEmployee(answer);
+        });
+};
+
+function addEmployee(employee) {
+    console.log(employee, 'addrole')
+    const query = `INSERT INTO employee SET ?`;
+    const params = employee;
 
     connection.query(query, params, function(err, results) {
         if(err) throw err;
