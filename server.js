@@ -39,7 +39,7 @@ promptUser = () => {
                     viewEmployee();
                     break;
                 case 'add a department':
-
+                    queryDepartment();
                     break;
                 case 'add a role':
                 
@@ -91,4 +91,29 @@ function viewEmployee() {
         console.table(results);
         promptUser();
     });
+};
+
+function queryDepartment() {
+    inquirer
+    .prompt([
+        {
+            type: "input",
+            name: "department",
+            message: "What is the department title?",
+        }
+    ]).then( 
+        function(answer) {
+        console.log(answer.department)
+        addDepartment(answer.department);
+    });
+};
+
+function addDepartment(answer) {
+    const query = `INSERT INTO departments (name) VALUES (?)`;
+    const params = [answer];
+
+    connection.query(query, params, function(err, results) {
+        if(err) throw err;
+        promptUser();
+    })
 };
