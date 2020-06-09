@@ -13,7 +13,6 @@ const connection = mysql.createConnection({
 connection.connect(err => {
     if (err) throw err;
     promptUser();
-    // console.log('connected as id ' + connection.threadId + '\n');
 });
 
 promptUser = () => {
@@ -48,7 +47,7 @@ promptUser = () => {
                     queryEmployee();
                     break;
                 case 'update an employee role':
-
+                    promptUpdateEmployee();
                     break;
                 default:
                     console.log('Make a better choice!')
@@ -57,7 +56,6 @@ promptUser = () => {
             }
         }
     )
-    // console.log('Make your Choice!');
 };
 
 function viewDepartment() {
@@ -104,7 +102,6 @@ function queryDepartment() {
         }
     ]).then( 
         function(answer) {
-        console.log(answer.department)
         addDepartment(answer.department);
     });
 };
@@ -134,18 +131,16 @@ function queryRole() {
         },
         {
             type: "input",
-            name: "department_id",
-            message: "What is the department ID?",
+            name: "department_ID",
+            message: "What is the department ID?"
         },
     ]).then( 
         function(answer) {
-        console.log(answer, 'prompt')
         addRole(answer);
         });
 };
 
 function addRole(role) {
-    console.log(role, 'addrole')
     const query = `INSERT INTO role SET ?`;
     const params = role;
 
@@ -161,36 +156,86 @@ function queryEmployee() {
         {
             type: "input",
             name: "first_name",
-            message: "What is the first name?",
+            message: "What is the first name?"
         },
         {
             type: "input",
             name: "last_name",
-            message: "What is the last name?",
+            message: "What is the last name?"
         },
         {
             type: "input",
             name: "role_id",
-            message: "What is the role ID?",
+            message: "What is the role ID?"
         },
         {
             type: "input",
             name: "manager_id",
-            message: "What is the manager ID?",
+            message: "What is the manager ID?"
         },
     ]).then( 
         function(answer) {
-        console.log(answer, 'prompt')
         addEmployee(answer);
         });
 };
 
 function addEmployee(employee) {
-    console.log(employee, 'addrole')
-    const query = `INSERT INTO employee SET ?`;
+    const query = `INSERT INTO employment_db.employee SET ?`;
     const params = employee;
 
     connection.query(query, params, function(err, results) {
+        if(err) throw err;
+        promptUser();
+    })
+};
+
+function promptUpdateEmployee() {
+    const query = `SELECT employee.id, employee.first_name, employee.last_name, role.title AS role, concat(manager.first_name,' ', manager.last_name) AS manager
+                    FROM employee
+                    LEFT JOIN employee manager
+                    ON employee.manager_id = manager.id
+                    LEFT JOIN role
+                    on employee.role_id = role.id;`
+    connection.query(query, function(err, results) {
+        if(err) throw err;
+    inquirer
+    .prompt([
+        {
+            type: "list",
+            name: "employee",
+            message: "Which employee is edited?",
+            choices: results
+        },
+        {
+            type: "input",
+            name: "first_name",
+            message: "What is the first name?"
+        },
+        {
+            type: "input",
+            name: "last_name",
+            message: "What is the last name?"
+        },
+        {
+            type: "input",
+            name: "role_id",
+            message: "What is the role ID?"
+        },
+        {
+            type: "input",
+            name: "manager_id",
+            message: "What is the manager ID?"
+        },
+    ]).then( 
+        function(answer) {
+        addEmployee(answer);
+        });
+    });
+};
+
+function addEmployee(answer) {
+    const query = `UPDATE employee set ?`
+    connection.query(query, answer, function(err, results) {
         if(err) throw err;
         promptUser();
     })
