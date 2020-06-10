@@ -52,9 +52,9 @@ each returning to the main menu after a select is completed.
 
 --------------------
 
-Alternatively, visit the instructional video [GoogleDrive url](https://notetakrr.herokuapp.com/):
+Alternatively, visit the instructional video [GoogleDrive url](https://drive.google.com/file/d/1PaPXPAnLBP-u53qt8XPc2kPf1l4CmaXJ/view):
 ```
-https://notetakrr.herokuapp.com/
+https://drive.google.com/file/d/1PaPXPAnLBP-u53qt8XPc2kPf1l4CmaXJ/view
 ```
 ## Features
 --------------------
